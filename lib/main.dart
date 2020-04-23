@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
+        errorColor: Colors.red,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
           title: TextStyle(
@@ -55,6 +56,12 @@ void _addNewTransaction(String title, double amount, DateTime date) {
     });
   }
 
+void _deleteTransaction(String id) {
+  setState(() {
+    _transactions.removeWhere((el) =>  el.id == id);
+  });
+}
+
   void _addBtnClick(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -83,7 +90,7 @@ void _addNewTransaction(String title, double amount, DateTime date) {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
           Chart(_recentTransaction),
-          TransactionList(_transactions)
+          TransactionList(_transactions, _deleteTransaction)
         ]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
