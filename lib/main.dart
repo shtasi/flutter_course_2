@@ -86,12 +86,20 @@ void _deleteTransaction(String id) {
 
   @override
   Widget build(BuildContext context) {
+    final _isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
         title: Text('Планировщик занятий'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: () => _addBtnClick(context))
         ],
       );
+    final trList = Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+            child: TransactionList(_transactions, _deleteTransaction));
+    final chart = Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+            child: Chart(_recentTransaction)
+          );
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
@@ -99,7 +107,7 @@ void _deleteTransaction(String id) {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-          Row(children: <Widget>[
+          if (_isLandscape) Row(children: <Widget>[
             Text('Show chart'),
             Switch(
               value: _showChart,
@@ -109,13 +117,12 @@ void _deleteTransaction(String id) {
               });
             })
           ],),
-          _showChart ? Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+          if (!_isLandscape) Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.3,
             child: Chart(_recentTransaction)
-          ) : 
-          Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
-            child: TransactionList(_transactions, _deleteTransaction))
+          ),
+          if (!_isLandscape) trList,
+          if (_isLandscape) _showChart ? chart : trList
         ]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
