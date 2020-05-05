@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './model/transaction.dart';
 import './widgets/chart.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // // запрещаем работу приложения в альбовном режиме, только портретная ориентация экрана
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+  runApp(MyApp());
+} 
 
 class MyApp extends StatelessWidget {
   @override
@@ -43,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Transaction(id: '3', title: 'cucumbers', amount: 3.99, date: DateTime.now()),
   ];
 
+  bool _showChart = false;
+
   List<Transaction> get _recentTransaction {
     return _transactions.where((tr) {
       return tr.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
@@ -77,20 +86,36 @@ void _deleteTransaction(String id) {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    final appBar = AppBar(
         title: Text('Планировщик занятий'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: () => _addBtnClick(context))
         ],
-      ),
+      );
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
               child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-          Chart(_recentTransaction),
-          TransactionList(_transactions, _deleteTransaction)
+          Row(children: <Widget>[
+            Text('Show chart'),
+            Switch(
+              value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            })
+          ],),
+          _showChart ? Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+            child: Chart(_recentTransaction)
+          ) : 
+          Container(
+            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+            child: TransactionList(_transactions, _deleteTransaction))
         ]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
