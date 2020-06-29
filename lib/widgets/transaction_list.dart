@@ -16,7 +16,7 @@ class TransactionList extends StatelessWidget {
       child: transactions.isEmpty ?
       LayoutBuilder(builder: (context, constraints) {
         return Column(children: <Widget>[
-        Text('Ни одной покупки не было!', style: Theme.of(context).textTheme.title),
+        Text('Ни одной покупки не было!', style: Theme.of(context).textTheme.headline6),
         SizedBox(height: 25,),
         Container(
           height: constraints.maxHeight * 0.6,
@@ -38,9 +38,16 @@ class TransactionList extends StatelessWidget {
                     child: Text('\$${transactions[index].amount}')),
                     ),
                     ),
-              title: Text(transactions[index].title, style: Theme.of(context).textTheme.title,),
+              title: Text(transactions[index].title, style: Theme.of(context).textTheme.headline6,),
               subtitle: Text(DateFormat.yMMMd().format(transactions[index].date)),
-              trailing: IconButton(
+              trailing: MediaQuery.of(context).size.width > 560
+              ? FlatButton.icon(
+                onPressed: ()=>  delFunc(transactions[index].id),
+                icon: Icon(Icons.delete),
+                label: Text('Delete'),
+                textColor: Theme.of(context).errorColor,
+              )
+              : IconButton(
                 icon: Icon(Icons.delete),
                 color: Theme.of(context).errorColor,
                 onPressed: ()=>  delFunc(transactions[index].id)

@@ -25,13 +25,13 @@ class MyApp extends StatelessWidget {
         errorColor: Colors.red,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-          title: TextStyle(
+          headline6: TextStyle(
             fontFamily: 'OpenSans',
             fontWeight: FontWeight.bold,
             fontSize: 18),
           button: TextStyle(color: Colors.white)
             ),
-        appBarTheme: AppBarTheme(textTheme: ThemeData.light().textTheme.copyWith(title: TextStyle(fontFamily: 'OpenSans', fontSize: 20)))
+        appBarTheme: AppBarTheme(textTheme: ThemeData.light().textTheme.copyWith(headline6: TextStyle(fontFamily: 'OpenSans', fontSize: 20)))
       ),
       );
   }
@@ -86,7 +86,8 @@ void _deleteTransaction(String id) {
 
   @override
   Widget build(BuildContext context) {
-    final _isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
+    final _isLandscape = mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
         title: Text('Планировщик занятий'),
         actions: <Widget>[
@@ -94,10 +95,10 @@ void _deleteTransaction(String id) {
         ],
       );
     final trList = Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+            height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
             child: TransactionList(_transactions, _deleteTransaction));
     final chart = Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+            height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
             child: Chart(_recentTransaction)
           );
     return Scaffold(
@@ -118,7 +119,7 @@ void _deleteTransaction(String id) {
             })
           ],),
           if (!_isLandscape) Container(
-            height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.3,
+            height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.3,
             child: Chart(_recentTransaction)
           ),
           if (!_isLandscape) trList,
